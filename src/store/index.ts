@@ -1,12 +1,13 @@
 import { InjectionKey } from "vue";
 import { createStore, Store } from "vuex";
-import file, { FileState } from "./file";
+import file, { FileState, FileSystem } from "./file";
 export type GlobalState = {
   count: number;
 };
 
 export type FullState = {
   file: FileState;
+  fileSystems: FileSystem;
 } & GlobalState;
 
 const globalStore = {

@@ -3,12 +3,35 @@
     <p class="sidebar__title">Столы</p>
     <div class="sidebar__divider"></div>
     <ul class="sidebar__items">
-      <li class="sidebar__item">Стол 1</li>
-      <li class="sidebar__item">Стол 2</li>
-      <li class="sidebar__item">Фото</li>
+      <li v-for="system of fileSystems" :key="system.id" class="sidebar__item">
+        {{ system.name }}
+      </li>
     </ul>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import { useStore } from "vuex";
+import { key } from "../store";
+
+export default defineComponent({
+  name: "TheSidebar",
+  props: {
+    msg: String,
+  },
+  setup() {
+    const store = useStore(key);
+    store.dispatch("fetchFileSystems");
+  },
+  computed: {
+    fileSystems(): any {
+      console.log("fs", this.$store.state.file.fileSystems);
+      return this.$store.state.file.fileSystems;
+    },
+  },
+});
+</script>
 
 <style scoped lang="stylus">
 .sidebar{

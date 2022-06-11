@@ -8,15 +8,12 @@ import { useStore } from "vuex";
 import { key } from "../store";
 
 export default defineComponent({
-  name: "HelloWorld",
+  name: "TheWorkSpace",
   props: {
     msg: String,
   },
   setup() {
     const store = useStore(key);
-
-    console.log(store.state.file, "state");
-    store.dispatch("fetchFile", 1);
   },
 });
 </script>

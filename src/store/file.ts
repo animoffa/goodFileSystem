@@ -5,11 +5,17 @@ import graphqlClient from "../utils/graphql";
 
 export interface FileState {
   files: File[];
+  fileSystems: FileSystem[];
 }
 
 export interface File {
-  id: number;
+  id: string;
   type: Type;
+  name: string;
+}
+
+export interface FileSystem {
+  id: string;
   name: string;
 }
 
@@ -18,38 +24,45 @@ enum Type {
   "folder",
 }
 
-const files = [
-  {
-    id: 1,
-    type: "folder",
-    name: "table1",
-  },
-];
-
 const file: Module<FileState, GlobalState> = {
-  state: (): FileState => ({ files: [] }),
+  state: (): FileState => ({ files: [], fileSystems: [] }),
   mutations: {
-    setFiles(state: FileState, files) {
-      state.files = files;
+    setFiles(state: FileState, res) {
+      state.fileSystems = res;
     },
   },
   actions: {
-    async fetchFile({ commit }, id) {
+    async fetchFileSystems({ commit }) {
       const response = await graphqlClient.query({
         query: gql`
-          query File($fileId: ID!) {
-            file(id: $fileId) {
+          query FileSystems {
+            fileSystems {
               id
               name
             }
           }
         `,
-        variables: { fileId: id },
       });
 
       console.log(response);
-      commit("setFiles", response.data);
+      commit("setFiles", response.data.fileSystems);
     },
+    // async fetchFile({ commit }, id) {
+    //   const response = await graphqlClient.query({
+    //     query: gql`
+    //       query FileSystems($fileId: ID!) {
+    //         fileSystems(id: $fileId) {
+    //           id
+    //           name
+    //         }
+    //       }
+    //     `,
+    //     variables: { fileId: id },
+    //   });
+
+    //   console.log(response);
+    //   commit("setFiles", response.data);
+    // },
   },
   getters: {},
 };
