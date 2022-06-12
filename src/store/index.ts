@@ -3,6 +3,7 @@ import { createStore, Store } from "vuex";
 import file, { FileState, FileSystem } from "./file";
 export type GlobalState = {
   count: number;
+  currentFileSystemID: string;
 };
 
 export type FullState = {
@@ -13,6 +14,12 @@ export type FullState = {
 const globalStore = {
   state: {
     count: 0,
+    currentFileSystemID: "",
+  },
+  mutations: {
+    changeCurrentFileSystemID(state: GlobalState, res: string) {
+      state.currentFileSystemID = res;
+    },
   },
   modules: {
     file,

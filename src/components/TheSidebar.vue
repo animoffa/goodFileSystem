@@ -3,7 +3,12 @@
     <p class="sidebar__title">Столы</p>
     <div class="sidebar__divider"></div>
     <ul class="sidebar__items">
-      <li v-for="system of fileSystems" :key="system.id" class="sidebar__item">
+      <li
+        v-for="system of fileSys"
+        :key="system.id"
+        class="sidebar__item"
+        @click="changeWorkspace(system.id)"
+      >
         {{ system.name }}
       </li>
     </ul>
@@ -11,9 +16,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import { key } from "../store";
+import { FileSystem } from "../store/file";
 
 export default defineComponent({
   name: "TheSidebar",
@@ -22,13 +28,19 @@ export default defineComponent({
   },
   setup() {
     const store = useStore(key);
-    store.dispatch("fetchFileSystems");
-  },
-  computed: {
-    fileSystems(): any {
-      console.log("fs", this.$store.state.file.fileSystems);
-      return this.$store.state.file.fileSystems;
-    },
+
+    let fileSys = ref<FileSystem[]>([]);
+    const getFileSystems = async () => {
+      await store.dispatch("fetchFileSystems");
+      fileSys.value = await store.state.file.fileSystems;
+    };
+    onMounted(getFileSystems);
+
+    const changeWorkspace = (id: string) => {
+      store.commit("changeCurrentFileSystemID", id);
+    };
+
+    return { fileSys, changeWorkspace };
   },
 });
 </script>

@@ -46,6 +46,7 @@ const file: Module<FileState, GlobalState> = {
 
       console.log(response);
       commit("setFiles", response.data.fileSystems);
+      return response.data.fileSystems;
     },
     // async fetchFile({ commit }, id) {
     //   const response = await graphqlClient.query({
