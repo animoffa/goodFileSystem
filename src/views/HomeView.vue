@@ -2,7 +2,6 @@
   <div class="home">
     <TheHeader />
     <TheSidebar />
-    <img alt="Vue logo" src="../assets/logo.png" />
     <TheWorkSpace msg="Welcome to Your Vue.js + TypeScript App" />
   </div>
 </template>

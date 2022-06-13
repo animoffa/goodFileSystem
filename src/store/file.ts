@@ -27,8 +27,11 @@ enum Type {
 const file: Module<FileState, GlobalState> = {
   state: (): FileState => ({ files: [], fileSystems: [] }),
   mutations: {
-    setFiles(state: FileState, res) {
+    setFileSystems(state: FileState, res) {
       state.fileSystems = res;
+    },
+    setFiles(state: FileState, res) {
+      state.files = res;
     },
   },
   actions: {
@@ -44,26 +47,27 @@ const file: Module<FileState, GlobalState> = {
         `,
       });
 
-      console.log(response);
-      commit("setFiles", response.data.fileSystems);
+      commit("setFileSystems", response.data.fileSystems);
       return response.data.fileSystems;
     },
-    // async fetchFile({ commit }, id) {
-    //   const response = await graphqlClient.query({
-    //     query: gql`
-    //       query FileSystems($fileId: ID!) {
-    //         fileSystems(id: $fileId) {
-    //           id
-    //           name
-    //         }
-    //       }
-    //     `,
-    //     variables: { fileId: id },
-    //   });
+    
+    async fetchFiles({ commit }, id: string) {
+      const response = await graphqlClient.query({
+        query: gql`
+          query Files($fsId: ID!) {
+            files(fsId: $fsId) {
+              id
+              name
+              type
+            }
+          }
+        `,
+        variables: { fsId: id },
+      });
 
-    //   console.log(response);
-    //   commit("setFiles", response.data);
-    // },
+      console.log(response, 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
+      commit("setFiles", response.data.files);
+    },
   },
   getters: {},
 };

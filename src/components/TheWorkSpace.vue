@@ -1,39 +1,33 @@
 <template>
-  <div class="hello">erer</div>
+	<div class="workspace">{{ files }}</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { useStore } from "vuex";
-import { key } from "../store";
+import { defineComponent, onMounted, computed } from 'vue';
+import { useStore } from 'vuex';
+import { key } from '../store';
 
 export default defineComponent({
-  name: "TheWorkSpace",
-  props: {
-    msg: String,
-  },
-  setup() {
-    const store = useStore(key);
-  },
+	name: 'TheWorkSpace',
+	props: {
+		msg: String,
+	},
+	setup() {
+		const store = useStore(key);
+		const getFiles = async () => {
+			await store.dispatch('fetchFiles', store.state.currentFileSystemID);
+		};
+		const files = computed(() => store.state.file.files);
+		onMounted(getFiles);
+
+    return {files};
+	},
 });
 </script>
 
 <style scoped lang="stylus">
-h3
-  margin 40px 0 0
-
-ul
-  list-style-type none
-  padding 0
-
-li
-  display inline-block
-  margin 0 10px
-
-a
-  color #42b983
+.workspace {
+  width: 78%;
+  margin: 0 0px 0 22%;
+}
 </style>
-
-function useStore(key: any) { throw new Error("Function not implemented."); }
-function useStore(key: any) { throw new Error("Function not implemented."); }
-function useStore(key: any) { throw new Error("Function not implemented."); }

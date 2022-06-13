@@ -1,47 +1,51 @@
 <template>
-  <div class="sidebar">
-    <p class="sidebar__title">Столы</p>
-    <div class="sidebar__divider"></div>
-    <ul class="sidebar__items">
-      <li
-        v-for="system of fileSys"
-        :key="system.id"
-        class="sidebar__item"
-        @click="changeWorkspace(system.id)"
-      >
-        {{ system.name }}
-      </li>
-    </ul>
-  </div>
+	<div class="sidebar">
+		<p class="sidebar__title">Столы</p>
+		<div class="sidebar__divider"></div>
+		<ul class="sidebar__items">
+			<li
+				v-for="system of fileSystems"
+				:key="system.id"
+				class="sidebar__item"
+        :class="{'-active': $store.state.currentFileSystemID == system.id}"
+				@click="$store.state.currentFileSystemID !== system.id && changeWorkspace(system.id)"
+			>
+				{{ system.name }}
+			</li>
+		</ul>
+	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
-import { useStore } from "vuex";
-import { key } from "../store";
-import { FileSystem } from "../store/file";
+import { defineComponent, onMounted, computed, watch } from 'vue';
+import { useStore } from 'vuex';
+import { key } from '../store';
 
 export default defineComponent({
-  name: "TheSidebar",
-  props: {
-    msg: String,
-  },
-  setup() {
-    const store = useStore(key);
+	name: 'TheSidebar',
+	props: {
+		msg: String,
+	},
+	setup() {
+		const store = useStore(key);
 
-    let fileSys = ref<FileSystem[]>([]);
-    const getFileSystems = async () => {
-      await store.dispatch("fetchFileSystems");
-      fileSys.value = await store.state.file.fileSystems;
+		// let fileSys = ref<FileSystem[]>([]);
+		const getFileSystems = async () => {
+			await store.dispatch('fetchFileSystems');
+		};
+    const setInitValue = async () => {
+      await getFileSystems().then(() => changeWorkspace(fileSystems.value[0].id))
     };
-    onMounted(getFileSystems);
+		const changeWorkspace = (id: string) => {
+			store.commit('changeCurrentFileSystemID', id);
+		};
 
-    const changeWorkspace = (id: string) => {
-      store.commit("changeCurrentFileSystemID", id);
-    };
+    const fileSystems = computed(() => store.state.file.fileSystems);
+    
+		onMounted(setInitValue);
 
-    return { fileSys, changeWorkspace };
-  },
+		return { changeWorkspace, fileSystems };
+	},
 });
 </script>
 
@@ -73,6 +77,11 @@ export default defineComponent({
         margin-bottom 25px
         list-style-type none
         cursor pointer
+
+        &.-active {
+          font-weight bold
+          cursor default
+        }
     }
 
     &__items {
