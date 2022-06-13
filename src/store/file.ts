@@ -20,8 +20,8 @@ export interface FileSystem {
 }
 
 enum Type {
-  "file",
-  "folder",
+  file = "FILE",
+  dir ="DIRECTORY",
 }
 
 const file: Module<FileState, GlobalState> = {
