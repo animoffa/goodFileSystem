@@ -12,6 +12,8 @@ export interface File {
   id: string;
   type: Type;
   name: string;
+  childrenIds: string[];
+  parentId: string;
 }
 
 export interface FileSystem {
@@ -52,13 +54,16 @@ const file: Module<FileState, GlobalState> = {
     },
     
     async fetchFiles({ commit }, id: string) {
+      console.log(id, 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
       const response = await graphqlClient.query({
         query: gql`
           query Files($fsId: ID!) {
-            files(fsId: $fsId) {
+            root(fsId: $fsId) {
               id
               name
               type
+              childrenIds
+              parentId
             }
           }
         `,
@@ -66,7 +71,7 @@ const file: Module<FileState, GlobalState> = {
       });
 
       console.log(response, 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
-      commit("setFiles", response.data.files);
+      commit("setFiles", [response.data.root]);
     },
   },
   getters: {},

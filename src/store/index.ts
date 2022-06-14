@@ -3,6 +3,7 @@ import { createStore, Store } from "vuex";
 import file, { FileState, FileSystem } from "./file";
 export type GlobalState = {
   count: number;
+  isPopupOpen: boolean;
   currentFileSystemID: string;
 };
 
@@ -15,11 +16,15 @@ const globalStore = {
   state: {
     count: 0,
     currentFileSystemID: "",
+    isPopupOpen: false,
   },
   mutations: {
     changeCurrentFileSystemID(state: GlobalState, res: string) {
       state.currentFileSystemID = res;
     },
+    changePopupOpened(state: GlobalState) {
+      state.isPopupOpen =  !state.isPopupOpen;
+    }
   },
   modules: {
     file,
